@@ -75,6 +75,11 @@ li.ui-state-default:last-child{
     margin-top:10px;
 }
 
-back-cross{
-  background-color: rgb(130, 211, 9)
+.closeButton{
+  padding-right: 22%;
+  padding-left: 0px;
+}
+
+.initiate{
+  background-color: orangered
 }

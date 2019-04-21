@@ -28,6 +28,17 @@ export default class Home extends Component {
     this.setState({players})
   }
 
+  handleEditPlayers = (e, key) => {
+    const players = this.state.players.map(player => {
+      if(player.id !== key){
+        return player
+      }else{
+        return {id: key, name: e.target.value}
+      }
+    })
+    this.setState({players})
+  } 
+
   render() {
     return (
       <div className="App">
@@ -36,20 +47,27 @@ export default class Home extends Component {
             <div className="col-md-6">
               <div className="todolist not-done">
                 <h1>Futbolin Tournament</h1>
-                <input name="addPlayer"  onChange={this.handleChange} type="text" className="form-control add-todo" placeholder="Add player" value={this.state.newPlayer}/>
+                <input name="addPlayer"  onChange={this.handleChange} type="text" 
+                  className="form-control add-todo" 
+                  placeholder="Add player" 
+                  value={this.state.newPlayer}/>
                 <button onClick={this.addPlayer}  className="btn btn-success">Add</button>
 
                 <ul id="sortable" className="list-unstyled">
-                  <PlayerList players={this.state.players} handleRemovePlayer={this.removePlayer}/>
+                  <h3>Players</h3>
+                  <PlayerList players={this.state.players}
+                   handleRemovePlayer={this.removePlayer} 
+                   handleEditPlayers={this.handleEditPlayers}
+                   />
                 </ul>
                 <div className="todo-footer">
-                  <strong><span className="count-todos"></span></strong> Items Left
+                  <button className="btn btn-success initiate">Initiate Tournament</button>
                 </div>
               </div>
             </div>
             <div className="col-md-6">
               <div className="todolist">
-                <h1>Already Done</h1>
+                <h1>Matches</h1>
                 <ul id="done-items" className="list-unstyled">
                 </ul>
               </div>
