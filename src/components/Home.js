@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PlayerList from './PlayerList';
+import SatarList from './StarList';
+import StarList from './StarList';
 
 export default class Home extends Component {
   constructor(props) {
@@ -42,6 +44,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="App">
+        <StarList starQty={4}/>
         <div className="container">
           <div className="row">
             <div className="col-md-6">
