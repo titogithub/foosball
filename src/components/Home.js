@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PlayerList from './PlayerList';
-import SatarList from './StarList';
-import StarList from './StarList';
+import DirectEliminationList from './DirectEliminationList';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       players: [],
-      newPlayer: ''
+      newPlayer: '',
+      matches: []
     };
   }
 
@@ -41,10 +41,27 @@ export default class Home extends Component {
     this.setState({players})
   } 
 
+  sortPlayers = () => {
+    const players = [...this.state.players]
+    const shuffledPlayers = players.sort(() => Math.random() -0.5)
+    const matches = this.playersCombination(shuffledPlayers)
+    this.setState({matches})
+    console.log("matches: ", this.state.matches)
+  }
+
+  playersCombination = (players) => {
+    let permutedPlayers = []
+    for (let i = 0; i < players.length - 1; i++) {
+      for (let j = i+1; j < players.length; j++) {
+        permutedPlayers.push({ idPlayerA: players[i].id, nameA: players[i].name , goalsA: 0, idPlayerB: players[j].id , nameB: players[j].name, goalsB: 0 })
+      }
+    }
+    return permutedPlayers
+  }
+
   render() {
     return (
       <div className="App">
-        <StarList starQty={4}/>
         <div className="container">
           <div className="row">
             <div className="col-md-6">
@@ -64,14 +81,15 @@ export default class Home extends Component {
                    />
                 </ul>
                 <div className="todo-footer">
-                  <button className="btn btn-success initiate">Initiate Tournament</button>
+                  <button className="btn btn-success initiate" onClick={this.sortPlayers}>Initiate Tournament</button>
                 </div>
               </div>
             </div>
             <div className="col-md-6">
               <div className="todolist">
                 <h1>Matches</h1>
-                <ul id="done-items" className="list-unstyled">
+                <ul  className="list-unstyled">
+                <DirectEliminationList matches={this.state.matches}/>
                 </ul>
               </div>
             </div>
