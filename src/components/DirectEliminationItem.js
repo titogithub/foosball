@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 
 const DirectEliminationItem = ({
     match, upScore, downScore
@@ -6,33 +7,33 @@ const DirectEliminationItem = ({
         <div> 
 	        <ul className="round round-1">
             <li className="spacer">&nbsp;</li>
-            <li className="game game-top winner"> {match.nameA}
+        <li className={classnames('game game-top', {'winner': match.goalsA > match.goalsB})}> {match.nameA}
            <span>
-                <i className="fas fa-sort-up fa-2x arrow" 
-                  onClick={() => upScore(match.idPlayerA)}
+                <i className="fas fa-sort-up fa-2x icon" 
+                  onClick={() => upScore(match.idPlayerA, match.idMatch)}
                 />
                 {match.goalsA}
-               <i className="fas fa-sort-down fa-2x arrow"
-                onClick={() => downScore(match.idPlayerA)}
+               <i className="fas fa-sort-down fa-2x icon"
+                  onClick={() => downScore(match.idPlayerA, match.idMatch)}
                 />
             </span>
             </li>
             <li className="game game-spacer">&nbsp;</li>
-            <li className="game game-bottom "> {match.nameB}
+        <li className={classnames('game game-bottom', { 'winner': match.goalsB > match.goalsA })}> {match.nameB}
             <span>
-            <i className="fas fa-sort-up fa-2x arrow" 
-              onClick={() => upScore(match.idPlayerB)}
+            <i className="fas fa-sort-up fa-2x icon" 
+              onClick={() => upScore(match.idPlayerB, match.idMatch)}
               />
                 {match.goalsB}
-             <i className="fas fa-sort-down fa-2x arrow"
-              onClick={() => downScore(match.idPlayerB)}
+             <i className="fas fa-sort-down fa-2x icon"
+              onClick={() => downScore(match.idPlayerB, match.idMatch)}
              />
               </span>
             </li>
           </ul>
           <div className="container">
             <div className="row">
-              <div className="col-xs-2 col-sm-1 "><div className="game game-top winner"> </div> </div>
+              <div className="col-xs-2 col-sm-1 "><div className="game game-top"> </div> </div>
               <div className="col-xs-2 col-sm-1"></div>
             </div>
             <div className="row">
