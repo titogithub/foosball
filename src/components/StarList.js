@@ -5,12 +5,17 @@ export default class StarList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: props.selected || 0
+      selected: 0
     };
   }
 
   handleStarClick = (qty) => {
     this.setState({selected:qty})
+    this.props.starsSelected(qty)
+  }
+
+  componentDidMount = () => {
+    console.log("starList mounted")
   }
 
   render() {
@@ -18,7 +23,7 @@ export default class StarList extends Component {
       <div> 
         {
           [...Array(this.props.starQty)].map((v,i) => (
-          <Star selected={this.state.selected > i} 
+          <Star key={i} selected={this.state.selected > i} 
           rateStar={() => this.handleStarClick(i+1)} />
         ))
       }

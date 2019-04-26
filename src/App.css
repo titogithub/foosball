@@ -130,9 +130,6 @@ li.game{
   padding-left:0px;
 }
 
-  li.game.winner{
-    font-weight:bold;
-  }
   li.game span{
     float:right;
     margin-right:5px;
@@ -162,6 +159,17 @@ li.game{
     color: #8468e9
   }
 
-    .arrow:hover{
+    .icon:hover{
     color: #8468e9
+  }
+
+  .winner{
+    font-weight:bold;
+    border: solid;
+    border-top-color: currentcolor;
+    border-right-color: currentcolor;
+    border-bottom-color: currentcolor;
+    border-left-color: currentcolor;
+    border-color: red;
+    background: aquamarine;
   }

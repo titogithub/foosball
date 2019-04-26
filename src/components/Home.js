@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PlayerList from './PlayerList';
 import DirectEliminationList from './DirectEliminationList';
+import BootstrapModal from './commons/BootstrapModal';
 
 export default class Home extends Component {
   constructor(props) {
@@ -8,7 +9,9 @@ export default class Home extends Component {
     this.state = {
       players: [],
       newPlayer: '',
-      matches: []
+      matches: [],
+      displaySettingsModal: false,
+      classified: 2
     };
   }
 
@@ -16,6 +19,16 @@ export default class Home extends Component {
     const { target } = e
     const newPlayer = target.value
     this.setState({newPlayer})
+  }
+
+  handleInputChange = (event) => {
+    const target = event.target;
+    const name = target.name;
+    const type = target.type;
+    const value = type === 'text' ? target.value : target.checked
+    this.setState({
+      [name]: value
+    })
   }
 
   addPlayer = () => {
@@ -46,17 +59,26 @@ export default class Home extends Component {
     const shuffledPlayers = players.sort(() => Math.random() -0.5)
     const matches = this.playersCombination(shuffledPlayers)
     this.setState({matches})
-    console.log("matches: ", this.state.matches)
   }
 
   playersCombination = (players) => {
     let permutedPlayers = []
     for (let i = 0; i < players.length - 1; i++) {
       for (let j = i+1; j < players.length; j++) {
-        permutedPlayers.push({ idPlayerA: players[i].id, nameA: players[i].name , goalsA: 0, idPlayerB: players[j].id , nameB: players[j].name, goalsB: 0 })
+        permutedPlayers.push({ idMatch: permutedPlayers.length+1, 
+                                idPlayerA: players[i].id, 
+                                nameA: players[i].name, 
+                                goalsA: 0,
+                                idPlayerB: players[j].id,
+                                nameB: players[j].name,
+                                goalsB: 0 })
       }
     }
     return permutedPlayers
+  }
+
+  toggleSettingsModal = () => {
+    this.setState({displaySettingsModal: !this.state.displaySettingsModal})
   }
 
   render() {
@@ -87,13 +109,51 @@ export default class Home extends Component {
             </div>
             <div className="col-md-6">
               <div className="todolist">
-                <h1>Matches</h1>
-                <ul  className="list-unstyled">
-                <DirectEliminationList matches={this.state.matches}/>
+                <div className="row">
+                  <div className="col-sm-1">
+                    <i className="fas fa-cogs fa-2x icon"
+                      onClick={this.toggleSettingsModal}
+                    />
+                  </div>
+                  <div className="col-sm-1"><h1>Matches</h1></div>
+                </div> 
+                <ul className="list-unstyled">
+                    <DirectEliminationList matches={this.state.matches} 
+                      players={this.state.players} 
+                      qualificationQty={this.state.classified}
+                    />
                 </ul>
               </div>
             </div>
           </div>
+         <BootstrapModal
+            isOpen={this.state.displaySettingsModal}
+            toggleModal={this.toggleSettingsModal}
+            okLabel='ok'
+            okModal={this.toggleSettingsModal}
+          >
+            <div className="row">
+              <div className="col-sm-5"><label>Quantity of classified players</label> </div>
+              <div className="col-sm-1">
+                <div className="row">
+                  <div className="col-sm-1"><i className="fas fa-sort-up fa-3x icon"
+                   onClick={() => { this.setState({ classified: this.state.classified += 1 }) }}/>
+                   </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-1"><i className="fas fa-sort-down fa-3x icon" 
+                    onClick={() => { this.setState({ classified: this.state.classified -= 1 }) }}/>
+                    </div>
+                </div>
+              </div>
+              <div className="col-sm-2">
+                <input name="classified" onChange={this.handleInputChange} type="text"
+                className="form-control add-todo"
+                value={this.state.classified} 
+                />
+            </div>
+            </div>
+          </BootstrapModal>
         </div>
       </div>
     );
