@@ -31,17 +31,6 @@ const DirectEliminationItem = ({
               </span>
             </li>
           </ul>
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-2 col-sm-1 "><div className="game game-top"> </div> </div>
-              <div className="col-xs-2 col-sm-1"></div>
-            </div>
-            <div className="row">
-              <div className="col-xs-2 col-sm-1"></div>
-              <div className="col-xs-2 col-sm-1"></div>
-            </div>
-          </div>
-
         </div>
       );
 

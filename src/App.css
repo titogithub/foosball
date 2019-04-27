@@ -173,3 +173,38 @@ li.game{
     border-color: red;
     background: aquamarine;
   }
+
+  .match-border-top{
+    border-top: #000 solid 2px;
+  }
+
+  .match-border-bottom{
+    border-bottom: #000 solid 2px;
+    padding-top: 45px;
+  }
+
+  .match-diagonal-right {
+    padding-top: 45px;
+     background: 
+         linear-gradient(to top left,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%)
+}
+
+.match-diagonal-left{
+  padding-top: 45px;
+  background:
+           linear-gradient(to top right,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%);
+}
+
+.match-row{
+  /* width: 25% */
+}

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import DirectEliminationItem from './DirectEliminationItem';
+import BootstrapModal from './commons/BootstrapModal';
+import Match from './Match';
 
 export default class DirectEliminationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches: props.matches || []
+      matches: props.matches || [],
+      showErrorModal: false
     };
   }
 
@@ -63,18 +66,19 @@ export default class DirectEliminationList extends Component {
       })
       playersPoints.push(punctuation)  
     })
-    console.log("players Points: ", playersPoints)
     const playersPointsAux = [...playersPoints]
     let maxCandidate = {}
-   
+    debugger
     // Calculate max n winners
     for (let i = 0; i < qualificationQty ; i++) {
+      let removeIndex = null
       for (let j = 0; j < playersPointsAux.length; j++) {
-        if (maxCandidate.id === undefined || maxCandidate.points < playersPointsAux[j].points) {
+        if (maxCandidate.idPlayer === undefined || maxCandidate.points < playersPointsAux[j].points) {
           maxCandidate = { ...playersPointsAux[j]}
+          removeIndex = j
         }
       }  
-      playersPointsAux.pop(maxCandidate)
+      playersPointsAux.splice(removeIndex,1)
       qualifiedPlayers.push(maxCandidate)
       maxCandidate = {}
     }
@@ -88,14 +92,15 @@ export default class DirectEliminationList extends Component {
       }
     })
     // END Calculate min
-    console.log("minPoints: ", minPoints)
     playersPointsAux.forEach((v,i) => {
       if (v.points === minPoints.points) {
-        console.log("there are players with the same points that the minimum player, check classification settings and add more players")
+        this.toggleModal()
       }
     })
+  }
 
-    console.log("qualified players: ", qualifiedPlayers)
+   toggleModal = () => {
+     this.setState({ showErrorModal: !this.state.showErrorModal })
   }
 
   render() {
@@ -106,9 +111,24 @@ export default class DirectEliminationList extends Component {
            downScore={this.handleDownScore}
            upScore={this.handleUpScore} />
       ))}
+        {this.state.matches.length > 0 && <Match match={this.state.matches[0]}
+          downScore={this.handleDownScore}
+          upScore={this.handleUpScore} />
+        }
      <div className="todo-footer">
           <button className="btn btn-success initiate" onClick={() => this.calculateWinners(this.props.qualificationQty)}>Calculate Winners</button>
      </div>
+        <BootstrapModal isOpen={this.state.showErrorModal}
+          okLabel='ok' 
+          toggleModal={this.toggleModal}
+          okModal={this.toggleModal}
+        >
+        <p>
+          There are players with the same points. Its imposible to determinate only {this.props.qualificationQty} number of players. Check classification settings and add more players
+        </p>
+
+        </BootstrapModal>
+      
     </div>
     );
   }
