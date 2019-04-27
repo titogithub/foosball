@@ -1,11 +1,12 @@
 import React from 'react';
+import classnames from 'classnames';
 
 const Match = ({
     match, upScore, downScore
 }) => (
   <div>
       <div className="row match-row">
-        <div className="col-xs-2">{match.nameA}</div>
+        <div className={classnames('col-xs-2 ', {'winner': match.goalsA > match.goalsB})}>{match.nameA}</div>
         <div className="col-xs-2">
           <div className="row">
             <div className="col-xs-2"> 
@@ -40,7 +41,7 @@ const Match = ({
             </div>
           </div>
         </div>
-        <div className="col-xs-2">Player B</div>
+        <div className={classnames('col-xs-2 ', { 'winner': match.goalsA < match.goalsB })}>{match.nameB}</div>
       </div>
       <div className="row match-row">
         <div className="col-xs-2 match-border-top"></div>

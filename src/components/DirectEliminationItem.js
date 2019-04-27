@@ -17,7 +17,7 @@ const DirectEliminationItem = ({
                   onClick={() => downScore(match.idPlayerA, match.idMatch)}
                 />
             </span>
-            </li>
+        </li>
             <li className="game game-spacer">&nbsp;</li>
         <li className={classnames('game game-bottom', { 'winner': match.goalsB > match.goalsA })}> {match.nameB}
             <span>
@@ -29,7 +29,7 @@ const DirectEliminationItem = ({
               onClick={() => downScore(match.idPlayerB, match.idMatch)}
              />
               </span>
-            </li>
+        </li>
           </ul>
         </div>
       );

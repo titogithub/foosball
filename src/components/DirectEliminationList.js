@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import DirectEliminationItem from './DirectEliminationItem';
 import BootstrapModal from './commons/BootstrapModal';
 import Match from './Match';
 
@@ -106,15 +105,11 @@ export default class DirectEliminationList extends Component {
   render() {
     return (
       <div>
-      {this.state.matches.map((match, i) => (
-          <DirectEliminationItem key={i} match={match}
-           downScore={this.handleDownScore}
-           upScore={this.handleUpScore} />
-      ))}
-        {this.state.matches.length > 0 && <Match match={this.state.matches[0]}
+        {this.state.matches.map((match, i) => (
+          <Match key={i} match={match}
           downScore={this.handleDownScore}
           upScore={this.handleUpScore} />
-        }
+        ))}
      <div className="todo-footer">
           <button className="btn btn-success initiate" onClick={() => this.calculateWinners(this.props.qualificationQty)}>Calculate Winners</button>
      </div>

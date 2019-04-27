@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PlayerList from './PlayerList';
 import DirectEliminationList from './DirectEliminationList';
 import BootstrapModal from './commons/BootstrapModal';
+import {exactNoOfGroups, unbalancedGroups} from './commons/utils';
+import DivideStrategy from './commons/divideStrategy';
 
 export default class Home extends Component {
   constructor(props) {
@@ -11,7 +13,10 @@ export default class Home extends Component {
       newPlayer: '',
       matches: [],
       displaySettingsModal: false,
-      classified: 2
+      mainSettingsModal: false,
+      classified: 2,
+      groups: 1,
+      divide: null
     };
   }
 
@@ -81,6 +86,16 @@ export default class Home extends Component {
     this.setState({displaySettingsModal: !this.state.displaySettingsModal})
   }
 
+  toggleMainSettingsModal = () => {
+    this.setState({ displaySettingsModal: !this.state.displaySettingsModal })
+  }
+
+  componentDidMount(){
+    const ds = new DivideStrategy()
+    ds.setStrategy(exactNoOfGroups)
+    this.setState({divide: ds})
+  }
+
   render() {
     return (
       <div className="App">
@@ -88,7 +103,14 @@ export default class Home extends Component {
           <div className="row">
             <div className="col-md-6">
               <div className="todolist not-done">
-                <h1>Futbolin Tournament</h1>
+                <div className="row">
+                  <div className="col-sm-1">
+                    <i className="fas fa-cogs fa-2x icon"
+                      onClick={this.toggleSettingsModal}
+                    />
+                  </div>
+                  <div className="col-sm-11"><h1>Futbolin Tournament</h1></div>
+                </div> 
                 <input name="addPlayer"  onChange={this.handleChange} type="text" 
                   className="form-control add-todo" 
                   placeholder="Add player" 
@@ -152,6 +174,35 @@ export default class Home extends Component {
                 value={this.state.classified} 
                 />
             </div>
+            </div>
+          </BootstrapModal>
+
+          <BootstrapModal
+            isOpen={this.state.mainSettingsModal}
+            toggleModal={this.toggleMainSettingsModal}
+            okLabel='ok'
+            okModal={this.toggleMainSettingsModal}
+          >
+            <div className="row">
+              <div className="col-sm-5"><label>Number of groups</label> </div>
+              <div className="col-sm-1">
+                <div className="row">
+                  <div className="col-sm-1"><i className="fas fa-sort-up fa-3x icon"
+                    onClick={() => { this.setState({ groups: this.state.groups += 1 }) }} />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-1"><i className="fas fa-sort-down fa-3x icon"
+                    onClick={() => { this.setState({ groups: this.state.groups -= 1 }) }} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-2">
+                <input name="groups" onChange={this.handleInputChange} type="text"
+                  className="form-control add-todo"
+                  value={this.state.groups}
+                />
+              </div>
             </div>
           </BootstrapModal>
         </div>
