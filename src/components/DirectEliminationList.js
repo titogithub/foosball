@@ -67,7 +67,6 @@ export default class DirectEliminationList extends Component {
     })
     const playersPointsAux = [...playersPoints]
     let maxCandidate = {}
-    debugger
     // Calculate max n winners
     for (let i = 0; i < qualificationQty ; i++) {
       let removeIndex = null
@@ -82,7 +81,6 @@ export default class DirectEliminationList extends Component {
       maxCandidate = {}
     }
     // End Calculate max n winners
-
     // Calculate min
     let minPoints = {}
     qualifiedPlayers.forEach((v,i) => {
@@ -91,14 +89,24 @@ export default class DirectEliminationList extends Component {
       }
     })
     // END Calculate min
-    playersPointsAux.forEach((v,i) => {
-      if (v.points === minPoints.points) {
-        this.toggleModal()
-      }
-    })
-  }
 
-   toggleModal = () => {
+    if (!this.validateWinners(playersPointsAux, minPoints)){
+      this.toggleModal()
+    }
+
+  }
+  
+  validateWinners = (winners, minPoints) => {
+    let validateWinners = true
+    winners.forEach((v, i) => {
+      if (v.points === minPoints.points) {
+        validateWinners = false
+      }
+  })
+    return validateWinners
+}
+
+  toggleModal = () => {
      this.setState({ showErrorModal: !this.state.showErrorModal })
   }
 

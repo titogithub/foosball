@@ -7,6 +7,6 @@ export default class DivideStrategy {
   }
 
   callStrategy(groupsNo, players){
-    this.strategy(groupsNo, players)
+   return  this.strategy(groupsNo, players)
   }
 };
