@@ -173,3 +173,122 @@ li.game{
     border-color: red;
     background: aquamarine;
   }
+
+  .match-border-top{
+    border-top: #000 solid 2px;
+  }
+
+  .match-border-bottom{
+    border-bottom: #000 solid 2px;
+    padding-top: 45px;
+  }
+
+  .match-diagonal-right {
+    padding-top: 45px;
+     background: 
+         linear-gradient(to top left,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%)
+}
+
+.match-diagonal-left{
+  padding-top: 45px;
+  background:
+           linear-gradient(to top right,
+             rgba(0,0,0,0) 0%,
+             rgba(0,0,0,0) calc(50% - 0.8px),
+             rgba(0,0,0,1) 50%,
+             rgba(0,0,0,0) calc(50% + 0.8px),
+             rgba(0,0,0,0) 100%);
+}
+
+.match-row{
+  /* width: 25% */
+}
+
+
+/* Radio button */
+.label-radio{
+ height: 40px
+}
+.frb-group {
+	margin: 15px 0;
+}
+
+.frb ~ .frb {
+	margin-top: 15px;
+}
+
+.frb input[type="radio"]:empty{
+	display: none;
+}
+
+.frb input[type="radio"] ~ label:before{
+	font-family: FontAwesome;
+	content: '\f096';
+	position: absolute;
+	top: 50%;
+	margin-top: -11px;
+	left: 15px;
+	font-size: 22px;
+}
+
+.frb input[type="radio"]:checked ~ label:before{
+	content: '\f046';
+}
+
+.frb input[type="radio"] ~ label {
+	position: relative;
+	cursor: pointer;
+	width: 100%;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f2f2f2;
+}
+
+.frb input[type="radio"] ~ label:focus,
+.frb input[type="radio"] ~ label:hover{
+	box-shadow: 0px 0px 3px #333;
+}
+
+.frb input[type="radio"]:checked ~ label {
+	color: #fafafa;
+}
+
+.frb input[type="radio"]:checked ~ label {
+	background-color: #f2f2f2;
+}
+
+.frb.frb-default input[type="radio"]:checked ~ label{
+	color: #333;
+}
+
+.frb input[type="radio"]:empty ~ label span,
+.frb input[type="checkbox"]:empty ~ label span {
+	display: inline-block;
+}
+
+.frb input[type="radio"]:empty ~ label span.frb-title,
+.frb input[type="checkbox"]:empty ~ label span.frb-title {
+	font-size: 16px;
+	font-weight: 700;
+	margin: 5px 5px 5px 50px;
+}
+
+.frb input[type="radio"]:empty ~ label span.frb-description{
+	font-weight: normal;
+	font-style: italic;
+	color: #999;
+	margin: 5px 5px 5px 50px;
+}
+
+.frb input[type="radio"]:empty:checked ~ label span.frb-description{
+	color: #fafafa;
+}
+
+.frb.frb-default input[type="radio"]:empty:checked ~ label span.frb-description{
+	color: #999;
+}

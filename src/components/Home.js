@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PlayerList from './PlayerList';
 import DirectEliminationList from './DirectEliminationList';
 import BootstrapModal from './commons/BootstrapModal';
+import { exactNoOfGroups, unbalancedGroups, generateMatches} from './commons/utils';
+import DivideStrategy from './commons/divideStrategy';
+import RadioButtons from './RadioButton';
 
 export default class Home extends Component {
   constructor(props) {
@@ -11,7 +14,11 @@ export default class Home extends Component {
       newPlayer: '',
       matches: [],
       displaySettingsModal: false,
-      classified: 2
+      mainSettingsModal: false,
+      classified: 2,
+      groups: 2,
+      divide: null,
+      selectedStrategy: ''
     };
   }
 
@@ -25,10 +32,23 @@ export default class Home extends Component {
     const target = event.target;
     const name = target.name;
     const type = target.type;
-    const value = type === 'text' ? target.value : target.checked
+    const value = ((type === 'text') || (type === 'radio' )) ? target.value : target.checked
     this.setState({
       [name]: value
     })
+  }
+
+  handleRadioChange = (name, value) => {
+    this.setState({
+      [name]: value
+    })
+    if (value === 'exactNoOfGroups' ){
+      this.state.divide.setStrategy(exactNoOfGroups)
+    }
+    if (value === 'unbalancedGroups') {
+      this.state.divide.setStrategy(unbalancedGroups)
+    }
+
   }
 
   addPlayer = () => {
@@ -54,14 +74,17 @@ export default class Home extends Component {
     this.setState({players})
   } 
 
-  sortPlayers = () => {
+  initiateTournament = () => {
     const players = [...this.state.players]
-    const shuffledPlayers = players.sort(() => Math.random() -0.5)
-    const matches = this.playersCombination(shuffledPlayers)
+    let groups = this.state.divide.callStrategy(this.state.groups, players)
+    let matches = []
+    groups.forEach(v => {
+      matches.push({matches:generateMatches(v),groupedPlayers:v})
+    });
     this.setState({matches})
   }
 
-  playersCombination = (players) => {
+  generateMatches1 = (players) => {
     let permutedPlayers = []
     for (let i = 0; i < players.length - 1; i++) {
       for (let j = i+1; j < players.length; j++) {
@@ -81,6 +104,16 @@ export default class Home extends Component {
     this.setState({displaySettingsModal: !this.state.displaySettingsModal})
   }
 
+  toggleMainSettingsModal = () => {
+    this.setState({ mainSettingsModal: !this.state.mainSettingsModal })
+  }
+
+  componentDidMount(){
+    const ds = new DivideStrategy()
+    this.setState({ divide: ds }, () => this.state.divide.setStrategy(exactNoOfGroups)
+)
+  }
+
   render() {
     return (
       <div className="App">
@@ -88,7 +121,14 @@ export default class Home extends Component {
           <div className="row">
             <div className="col-md-6">
               <div className="todolist not-done">
-                <h1>Futbolin Tournament</h1>
+                <div className="row">
+                  <div className="col-sm-1">
+                    <i className="fas fa-cogs fa-2x icon"
+                      onClick={this.toggleMainSettingsModal}
+                    />
+                  </div>
+                  <div className="col-sm-11"><h1>Futbolin Tournament</h1></div>
+                </div> 
                 <input name="addPlayer"  onChange={this.handleChange} type="text" 
                   className="form-control add-todo" 
                   placeholder="Add player" 
@@ -103,7 +143,7 @@ export default class Home extends Component {
                    />
                 </ul>
                 <div className="todo-footer">
-                  <button className="btn btn-success initiate" onClick={this.sortPlayers}>Initiate Tournament</button>
+                  <button className="btn btn-success initiate" onClick={this.initiateTournament}>Initiate Tournament</button>
                 </div>
               </div>
             </div>
@@ -118,10 +158,15 @@ export default class Home extends Component {
                   <div className="col-sm-1"><h1>Matches</h1></div>
                 </div> 
                 <ul className="list-unstyled">
-                    <DirectEliminationList matches={this.state.matches} 
-                      players={this.state.players} 
+                {this.state.matches.map((v,i) => {
+                  return (<div key={i} ><h1>Group {i}</h1> 
+                    <DirectEliminationList matches={v.matches} 
+                      players={v.groupedPlayers}
                       qualificationQty={this.state.classified}
                     />
+                  </div>)
+                })
+                     }
                 </ul>
               </div>
             </div>
@@ -137,12 +182,12 @@ export default class Home extends Component {
               <div className="col-sm-1">
                 <div className="row">
                   <div className="col-sm-1"><i className="fas fa-sort-up fa-3x icon"
-                   onClick={() => { this.setState({ classified: this.state.classified += 1 }) }}/>
+                   onClick={() => { this.setState({ classified: this.state.classified + 1 }) }}/>
                    </div>
                 </div>
                 <div className="row">
                   <div className="col-sm-1"><i className="fas fa-sort-down fa-3x icon" 
-                    onClick={() => { this.setState({ classified: this.state.classified -= 1 }) }}/>
+                    onClick={() => { this.setState({ classified: this.state.classified -1 }) }}/>
                     </div>
                 </div>
               </div>
@@ -152,6 +197,57 @@ export default class Home extends Component {
                 value={this.state.classified} 
                 />
             </div>
+            </div>
+          </BootstrapModal>
+
+          <BootstrapModal
+            isOpen={this.state.mainSettingsModal}
+            toggleModal={this.toggleMainSettingsModal}
+            okLabel='ok'
+            okModal={this.toggleMainSettingsModal}
+          >
+           <div>
+            <div className="row">
+              <div className="col-sm-5"><label>Number of groups</label> </div>
+              <div className="col-sm-1">
+                <div className="row">
+                  <div className="col-sm-1"><i className="fas fa-sort-up fa-3x icon"
+                    onClick={() => { this.setState({ groups: this.state.groups + 1 }) }} />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-1"><i className="fas fa-sort-down fa-3x icon"
+                    onClick={() => { this.setState({ groups: this.state.groups - 1 }) }} />
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-2">
+                <input name="groups" onChange={this.handleInputChange} type="text"
+                  className="form-control add-todo"
+                  value={this.state.groups}
+                />
+              </div>
+            </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <RadioButtons
+                    name="selectedStrategy"
+                    value="exactNoOfGroups"
+                    handleOptionChange={this.handleRadioChange}
+                    selectedOption={this.state.selectedStrategy}
+                    label='Exact Number of Groups'
+                  />
+                </div>
+                <div className="col-md-12">
+                  <RadioButtons
+                    name="selectedStrategy"
+                    value="unbalancedGroups"
+                    handleOptionChange={this.handleRadioChange}
+                    selectedOption={this.state.selectedStrategy}
+                    label='Unbalanced Groups'
+                  />
+                </div>
+              </div>
             </div>
           </BootstrapModal>
         </div>
