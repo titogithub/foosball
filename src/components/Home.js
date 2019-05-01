@@ -13,6 +13,7 @@ export default class Home extends Component {
       players: [],
       newPlayer: '',
       matches: [],
+      classifiedPlayers: [],
       displaySettingsModal: false,
       mainSettingsModal: false,
       classified: 2,
@@ -20,6 +21,38 @@ export default class Home extends Component {
       divide: null,
       selectedStrategy: ''
     };
+  }
+
+  addWinners = (groupId, winners) => {
+    debugger
+    const c = this.state.classifiedPlayers.length;
+    if (!this.state.classifiedPlayers.length){
+      this.setState({ classifiedPlayers: [{ groupId, winners }] }, this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
+    }else {
+      const classifiedPlayers = [...this.state.classifiedPlayers]
+      for (let i=0; i < classifiedPlayers.length; i++){
+        if (classifiedPlayers[i].groupId === groupId){
+          classifiedPlayers[i].winners = winners
+          this.setState({ classifiedPlayers: [...classifiedPlayers] }, this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
+          console.log("new players group: ", classifiedPlayers)
+          break
+        }
+        if (i === classifiedPlayers.length-1){
+          classifiedPlayers.push({ groupId, winners })
+          this.setState({classifiedPlayers: [{ groupId, winners }]},this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
+        }
+      }
+    }
+
+  }
+
+  addClassifiedPlayersToList = classifiedPlayers => {
+    console.log("add classifiedPlayers to list")
+    const newPlayers = []
+    for (const group of classifiedPlayers){
+      newPlayers.push(group.winners)
+    }
+    this.setState({players : [...newPlayers]})
   }
 
   handleChange = (e) => {
@@ -53,22 +86,22 @@ export default class Home extends Component {
 
   addPlayer = () => {
     const newPlayers = [...this.state.players]
-    newPlayers.push({id: this.state.players.length+1, name:this.state.newPlayer})
+    newPlayers.push({idPlayer: this.state.players.length+1, name:this.state.newPlayer})
     this.setState({ players: newPlayers})
     this.setState({newPlayer:''})
   }
 
   removePlayer = (id) => {
-    const players = this.state.players.filter(player => player.id !== id)
+    const players = this.state.players.filter(player => player.idPlayer !== id)
     this.setState({players})
   }
 
   handleEditPlayers = (e, key) => {
     const players = this.state.players.map(player => {
-      if(player.id !== key){
+      if(player.idPlayer !== key){
         return player
       }else{
-        return {id: key, name: e.target.value}
+        return {idPlayer: key, name: e.target.value}
       }
     })
     this.setState({players})
@@ -82,22 +115,6 @@ export default class Home extends Component {
       matches.push({matches:generateMatches(v),groupedPlayers:v})
     });
     this.setState({matches})
-  }
-
-  generateMatches1 = (players) => {
-    let permutedPlayers = []
-    for (let i = 0; i < players.length - 1; i++) {
-      for (let j = i+1; j < players.length; j++) {
-        permutedPlayers.push({ idMatch: permutedPlayers.length+1, 
-                                idPlayerA: players[i].id, 
-                                nameA: players[i].name, 
-                                goalsA: 0,
-                                idPlayerB: players[j].id,
-                                nameB: players[j].name,
-                                goalsB: 0 })
-      }
-    }
-    return permutedPlayers
   }
 
   toggleSettingsModal = () => {
@@ -150,11 +167,6 @@ export default class Home extends Component {
             <div className="col-md-6">
               <div className="todolist">
                 <div className="row">
-                  <div className="col-sm-1">
-                    <i className="fas fa-cogs fa-2x icon"
-                      onClick={this.toggleSettingsModal}
-                    />
-                  </div>
                   <div className="col-sm-1"><h1>Matches</h1></div>
                 </div> 
                 <ul className="list-unstyled">
@@ -163,6 +175,8 @@ export default class Home extends Component {
                     <DirectEliminationList matches={v.matches} 
                       players={v.groupedPlayers}
                       qualificationQty={this.state.classified}
+                      addWinners={this.addWinners}
+                      groupId={i}
                     />
                   </div>)
                 })

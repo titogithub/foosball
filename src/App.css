@@ -292,3 +292,7 @@ li.game{
 .frb.frb-default input[type="radio"]:empty:checked ~ label span.frb-description{
 	color: #999;
 }
+
+.settings{
+  padding-bottom: 10px;
+}

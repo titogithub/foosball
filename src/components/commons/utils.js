@@ -33,10 +33,10 @@ const generateMatches = (players) => {
     for (let j = i + 1; j < players.length; j++) {
       matches.push({
         idMatch: matches.length + 1,
-        idPlayerA: players[i].id,
+        idPlayerA: players[i].idPlayer,
         nameA: players[i].name,
         goalsA: 0,
-        idPlayerB: players[j].id,
+        idPlayerB: players[j].idPlayer,
         nameB: players[j].name,
         goalsB: 0
       })
