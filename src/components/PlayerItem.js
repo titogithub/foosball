@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
 const PlayerItem = ({
-  player, removePlayer, handleEditPlayers
+  player, removePlayer, handleEditPlayers, idPlayer
 }) => (
-      <li className="ui-state-default back-cross">
+      <li className="ui-state-default back-cross" key={idPlayer}>
       <div className="row">
         <div className="col-6 col-sm-9">
           <input onChange={handleEditPlayers} name="editPlayer" type="text" className="form-control add-todo" placeholder="Add player" value={player} />

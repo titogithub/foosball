@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PlayerList from './PlayerList';
+import PlayerItem from './PlayerItem';
 import DirectEliminationList from './DirectEliminationList';
 import BootstrapModal from './commons/BootstrapModal';
 import { exactNoOfGroups, unbalancedGroups, generateMatches} from './commons/utils';
@@ -24,35 +25,33 @@ export default class Home extends Component {
   }
 
   addWinners = (groupId, winners) => {
-    debugger
     const c = this.state.classifiedPlayers.length;
     if (!this.state.classifiedPlayers.length){
-      this.setState({ classifiedPlayers: [{ groupId, winners }] }, this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
+      this.setState({ classifiedPlayers: [{ groupId, winners }] }, () =>  this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
     }else {
       const classifiedPlayers = [...this.state.classifiedPlayers]
       for (let i=0; i < classifiedPlayers.length; i++){
         if (classifiedPlayers[i].groupId === groupId){
           classifiedPlayers[i].winners = winners
           this.setState({ classifiedPlayers: [...classifiedPlayers] }, this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
-          console.log("new players group: ", classifiedPlayers)
           break
         }
         if (i === classifiedPlayers.length-1){
           classifiedPlayers.push({ groupId, winners })
-          this.setState({classifiedPlayers: [{ groupId, winners }]},this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
+          this.setState({classifiedPlayers: [{ groupId, winners }]},() => this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
         }
       }
     }
-
   }
 
   addClassifiedPlayersToList = classifiedPlayers => {
-    console.log("add classifiedPlayers to list")
     const newPlayers = []
     for (const group of classifiedPlayers){
-      newPlayers.push(group.winners)
+      for (const winners of group.winners){
+        newPlayers.push(winners)
+      }
     }
-    this.setState({players : [...newPlayers]})
+  this.setState({ players: [...newPlayers] })
   }
 
   handleChange = (e) => {
@@ -86,7 +85,11 @@ export default class Home extends Component {
 
   addPlayer = () => {
     const newPlayers = [...this.state.players]
-    newPlayers.push({idPlayer: this.state.players.length+1, name:this.state.newPlayer})
+    if (!this.state.players.length) {
+      newPlayers.push({ idPlayer: 0, name: this.state.newPlayer })
+    }else{
+      newPlayers.push({ idPlayer: this.state.players[this.state.players.length - 1].idPlayer + 1, name: this.state.newPlayer })
+    }
     this.setState({ players: newPlayers})
     this.setState({newPlayer:''})
   }
@@ -154,10 +157,11 @@ export default class Home extends Component {
 
                 <ul id="sortable" className="list-unstyled">
                   <h3>Players</h3>
-                  <PlayerList players={this.state.players}
-                   handleRemovePlayer={this.removePlayer} 
-                   handleEditPlayers={this.handleEditPlayers}
-                   />
+                   {this.state.players.map((player,i) => (
+                     <PlayerItem player={player.name} key={i} idPlayer={player.idPlayer} removePlayer={() => this.removePlayer(player.idPlayer)}
+                       handleEditPlayers={(e) => this.handleEditPlayers(e, player.idPlayer)}
+                     />
+                   ))}
                 </ul>
                 <div className="todo-footer">
                   <button className="btn btn-success initiate" onClick={this.initiateTournament}>Initiate Tournament</button>
@@ -175,7 +179,7 @@ export default class Home extends Component {
                     <DirectEliminationList matches={v.matches} 
                       players={v.groupedPlayers}
                       qualificationQty={this.state.classified}
-                      addWinners={this.addWinners}
+                      addWinners={(groupId, qualifiedPlayers) => this.addWinners(groupId, qualifiedPlayers)}
                       groupId={i}
                     />
                   </div>)

@@ -116,7 +116,6 @@ export default class DirectEliminationList extends Component {
     }
 
     console.log("classified players: ", qualifiedPlayers)
-    // this.addWinnersToPlayerList(qualifiedPlayers)
     this.props.addWinners(this.state.groupId, qualifiedPlayers)
 
   }
