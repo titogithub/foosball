@@ -45,10 +45,38 @@ const generateMatches = (players) => {
   return matches
 }
 
+const addNewPlayerToMatches = (newPlayer, players, matches) => {
+  for (let i = 0; i < players.length; i++) {
+      matches.push({
+        idMatch: (matches.length)? matches.slice(-1)[0].idMatch + 1 : 0,
+        idPlayerA: players[i].idPlayer,
+        nameA: players[i].name,
+        goalsA: 0,
+        idPlayerB: newPlayer.idPlayer,
+        nameB: newPlayer.name,
+        goalsB: 0
+      })
+  }
+}
+
+const removePlayerFromMatches = (idPlayer, matches, groupedPlayers) => {
+  debugger
+  const newMatches = matches.filter(v => {
+    return (v.idPlayerA !== idPlayer && v.idPlayerB !== idPlayer)
+  })
+  const newPlayers = groupedPlayers.filter(v => {
+    return v.idPlayer !== idPlayer
+  })
+  
+  return {newMatches, newPlayers}
+}
+
 export {
-   toggleModal,
-   mixPlayers,
-   exactNoOfGroups,
-   unbalancedGroups,
-   generateMatches
+  toggleModal,
+  mixPlayers,
+  exactNoOfGroups,
+  unbalancedGroups,
+  generateMatches,
+  addNewPlayerToMatches,
+  removePlayerFromMatches
     }

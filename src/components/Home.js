@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import PlayerList from './PlayerList';
 import PlayerItem from './PlayerItem';
 import DirectEliminationList from './DirectEliminationList';
 import BootstrapModal from './commons/BootstrapModal';
-import { exactNoOfGroups, unbalancedGroups, generateMatches} from './commons/utils';
+import { exactNoOfGroups, unbalancedGroups, generateMatches, addNewPlayerToMatches, removePlayerFromMatches} from './commons/utils';
 import DivideStrategy from './commons/divideStrategy';
 import RadioButtons from './RadioButton';
 
@@ -25,7 +24,6 @@ export default class Home extends Component {
   }
 
   addWinners = (groupId, winners) => {
-    const c = this.state.classifiedPlayers.length;
     if (!this.state.classifiedPlayers.length){
       this.setState({ classifiedPlayers: [{ groupId, winners }] }, () =>  this.addClassifiedPlayersToList([...this.state.classifiedPlayers]))
     }else {
@@ -90,8 +88,18 @@ export default class Home extends Component {
     }else{
       newPlayers.push({ idPlayer: this.state.players[this.state.players.length - 1].idPlayer + 1, name: this.state.newPlayer })
     }
+    this.setState({ players: newPlayers, newPlayer: ''})
+  }
+
+  addPlayerFromGroup = (name) => {
+    const newPlayers = [...this.state.players]
+    if (!this.state.players.length) {
+      newPlayers.push({ idPlayer: 0, name })
+    } else {
+      newPlayers.push({ idPlayer: this.state.players[this.state.players.length - 1].idPlayer + 1, name})
+    }
+    
     this.setState({ players: newPlayers})
-    this.setState({newPlayer:''})
   }
 
   removePlayer = (id) => {
@@ -110,12 +118,41 @@ export default class Home extends Component {
     this.setState({players})
   } 
 
+  addPlayerToGroup = (name, group) => {
+    const matches = [...this.state.matches]
+    const newIdPlayer = [...this.state.players.slice(-1)][0].idPlayer+1
+    matches.forEach(v => {
+      if(v.groupId === group){
+        addNewPlayerToMatches({ idPlayer: newIdPlayer, name }, v.groupedPlayers, v.matches)
+        v.groupedPlayers.push({idPlayer: newIdPlayer, name})
+        this.addPlayerFromGroup(name)
+      }
+    })
+    this.setState({matches})
+  }
+
+  removePlayerFromGroup = (idPlayer, group) => {
+    debugger
+    const matches = [...this.state.matches]
+    matches.forEach(v => {
+      if (v.groupId === group) {
+       const matchesAndPlayers = removePlayerFromMatches(idPlayer, v.matches, v.groupedPlayers)
+       v.matches = matchesAndPlayers.newMatches
+       v.groupedPlayers = matchesAndPlayers.newPlayers
+        // TODO remove player from players
+        // this.addPlayerFromGroup(name)
+      }
+    })
+    this.setState({ matches })
+
+  }
+
   initiateTournament = () => {
     const players = [...this.state.players]
     let groups = this.state.divide.callStrategy(this.state.groups, players)
     let matches = []
-    groups.forEach(v => {
-      matches.push({matches:generateMatches(v),groupedPlayers:v})
+    groups.forEach((v,i) => {
+      matches.push({matches:generateMatches(v), groupedPlayers:v, groupId:i})
     });
     this.setState({matches})
   }
@@ -180,7 +217,9 @@ export default class Home extends Component {
                       players={v.groupedPlayers}
                       qualificationQty={this.state.classified}
                       addWinners={(groupId, qualifiedPlayers) => this.addWinners(groupId, qualifiedPlayers)}
-                      groupId={i}
+                      groupId={v.groupId}
+                      addPlayer={(name, group) => this.addPlayerToGroup(name, group)}
+                      removePlayerFromGroup={(idPlayer, group) => this.removePlayerFromGroup(idPlayer, group)}
                     />
                   </div>)
                 })

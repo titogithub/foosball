@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import BootstrapModal from './commons/BootstrapModal';
 import Match from './Match';
+import PlayerItem from './PlayerItem';
 
 export default class DirectEliminationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       matches: props.matches || [],
+      groupPlayers: props.players || [],
       showErrorModal: false,
       classified: 1,
       displaySettingsModal: false,
-      groupId: props.groupId
+      displayPlayersModal: false,
+      groupId: props.groupId,
+      newPlayer: ''
     };
   }
 
@@ -24,6 +28,16 @@ export default class DirectEliminationList extends Component {
     })
   }
 
+  handleAddPlayer = () => {
+    const newPlayers = [...this.state.groupPlayers]
+    if (!this.state.groupPlayers.length) {
+      newPlayers.push({ idPlayer: 0, name: this.state.newPlayer })
+    } else {
+      newPlayers.push({ idPlayer: this.state.groupPlayers[this.state.groupPlayers.length - 1].idPlayer + 1, name: this.state.newPlayer })
+    }
+    this.setState({ groupPlayers: newPlayers, newPlayer: '' })
+  }
+
   addWinnersToPlayerList = winners => {
     this.props.addWinners(this.state.groupId, winners)
   }
@@ -33,7 +47,7 @@ export default class DirectEliminationList extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    this.setState({matches: nextProps.matches})
+    this.setState({ matches: nextProps.matches, groupPlayers: nextProps.players})
   };
 
   handleUpScore = (idPlayer, idMatch) => {
@@ -110,14 +124,11 @@ export default class DirectEliminationList extends Component {
       }
     })
     // END Calculate min
-
     if (!this.validateWinners(playersPointsAux, minPoints)){
       this.toggleModal()
+    }else{
+      this.props.addWinners(this.state.groupId, qualifiedPlayers)
     }
-
-    console.log("classified players: ", qualifiedPlayers)
-    this.props.addWinners(this.state.groupId, qualifiedPlayers)
-
   }
   
   validateWinners = (winners, minPoints) => {
@@ -134,13 +145,31 @@ export default class DirectEliminationList extends Component {
      this.setState({ showErrorModal: !this.state.showErrorModal })
   }
 
+  togglePlayersModal = () => {
+    this.setState({ displayPlayersModal: !this.state.displayPlayersModal })
+  }
+
+  addNewGroupPlayer = () => {
+    this.props.addPlayer(this.state.newPlayer, this.state.groupId)
+    this.setState({newPlayer: ''})
+  }
+
+  removePlayerFromGroup = (idPlayer, groupId) => {
+    this.props.removePlayerFromGroup(idPlayer, groupId)
+  }
+
   render() {
     return (
       <div>
         <div className="row">
-          <div className="col-sm-1 settings">
+          <div className="col-sm-6 settings">
             <i className="fas fa-cogs fa-2x icon"
               onClick={this.toggleSettingsModal}
+            />
+          </div>
+          <div className="col-sm-6 settings">
+            <i className="fas fa-users fa-2x icon"
+              onClick={this.togglePlayersModal}
             />
           </div>
           </div>
@@ -190,6 +219,29 @@ export default class DirectEliminationList extends Component {
               />
             </div>
           </div>
+        </BootstrapModal>
+
+        <BootstrapModal
+          isOpen={this.state.displayPlayersModal}
+          toggleModal={this.togglePlayersModal}
+          okLabel='ok'
+          okModal={this.togglePlayersModal}
+        >
+        <ul className="list-unstyled">
+          <h3>Players</h3>
+          {this.state.groupPlayers.map((player, i) => (
+            <PlayerItem player={player.name} key={i} idPlayer={player.idPlayer} removePlayer={() => this.removePlayerFromGroup(player.idPlayer, this.state.groupId)}
+              handleEditPlayers={(e) => this.handleEditPlayers(e, player.idPlayer)}
+            />
+          ))}
+
+          <input name="newPlayer" onChange={this.handleInputChange} type="text"
+              className="form-control add-todo"
+              placeholder="Add player"
+              value={this.state.newPlayer} />
+          <button onClick={() => this.addNewGroupPlayer()} className="btn btn-success">Add</button>
+
+        </ul>
         </BootstrapModal>
     </div>
     );

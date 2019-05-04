@@ -51,7 +51,8 @@ body{
 li.ui-state-default{
     background:#fff;
     border:none;
-    border-bottom:1px solid #ddd;
+    border-bottom:4px ;
+    padding-top: 4px;
 }
 
 li.ui-state-default:last-child{
