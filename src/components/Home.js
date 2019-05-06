@@ -120,7 +120,7 @@ export default class Home extends Component {
 
   addPlayerToGroup = (name, group) => {
     const matches = [...this.state.matches]
-    const newIdPlayer = [...this.state.players.slice(-1)][0].idPlayer+1
+    const newIdPlayer = (!this.state.players.length)? 1 : [...this.state.players.slice(-1)][0].idPlayer+1
     matches.forEach(v => {
       if(v.groupId === group){
         addNewPlayerToMatches({ idPlayer: newIdPlayer, name }, v.groupedPlayers, v.matches)
@@ -131,20 +131,29 @@ export default class Home extends Component {
     this.setState({matches})
   }
 
+  deleteGroup = groupId => {
+    const newMatches = [...this.state.matches].filter(v => {
+      return v.groupId !== groupId
+    })
+    this.setState({matches:newMatches})
+  }
+
   removePlayerFromGroup = (idPlayer, group) => {
-    debugger
     const matches = [...this.state.matches]
     matches.forEach(v => {
       if (v.groupId === group) {
        const matchesAndPlayers = removePlayerFromMatches(idPlayer, v.matches, v.groupedPlayers)
        v.matches = matchesAndPlayers.newMatches
        v.groupedPlayers = matchesAndPlayers.newPlayers
-        // TODO remove player from players
-        // this.addPlayerFromGroup(name)
       }
     })
     this.setState({ matches })
+  }
 
+  addNewGroup = () => {
+    const matches = [...this.state.matches]
+    matches.push({groupId: (!matches.length)? 1: matches[matches.length-1].groupId+1, groupedPlayers: [], matches: []})
+    this.setState({ matches })
   }
 
   initiateTournament = () => {
@@ -212,18 +221,32 @@ export default class Home extends Component {
                 </div> 
                 <ul className="list-unstyled">
                 {this.state.matches.map((v,i) => {
-                  return (<div key={i} ><h1>Group {i}</h1> 
-                    <DirectEliminationList matches={v.matches} 
-                      players={v.groupedPlayers}
-                      qualificationQty={this.state.classified}
-                      addWinners={(groupId, qualifiedPlayers) => this.addWinners(groupId, qualifiedPlayers)}
-                      groupId={v.groupId}
-                      addPlayer={(name, group) => this.addPlayerToGroup(name, group)}
-                      removePlayerFromGroup={(idPlayer, group) => this.removePlayerFromGroup(idPlayer, group)}
-                    />
+                  return (
+                    <div key={i} >
+                      <div className="row">
+                        <div className="col-xs-9"><h1>Group {v.groupId}</h1></div>
+                        <div className="col-xs-1"><button onClick={() => this.deleteGroup(v.groupId)} className="btn btn-danger">Delete Group</button></div>
+                      </div>
+                    <div className="row">
+                      <div className="col-xs-12">
+                          <DirectEliminationList matches={v.matches}
+                            players={v.groupedPlayers}
+                            qualificationQty={this.state.classified}
+                            addWinners={(groupId, qualifiedPlayers) => this.addWinners(groupId, qualifiedPlayers)}
+                            groupId={v.groupId}
+                            addPlayer={(name, group) => this.addPlayerToGroup(name, group)}
+                            removePlayerFromGroup={(idPlayer, group) => this.removePlayerFromGroup(idPlayer, group)}
+                          />
+                      </div>
+                    </div>
                   </div>)
                 })
                      }
+                <div className="row new-group">
+                     <div className="col-xs-12">
+                      <button className="btn btn-primary" onClick={() => this.addNewGroup()}>Add New Group</button>
+                     </div>
+                </div>
                 </ul>
               </div>
             </div>
@@ -265,7 +288,7 @@ export default class Home extends Component {
           >
            <div>
             <div className="row">
-              <div className="col-sm-5"><label>Number of groups</label> </div>
+              <div className="col-sm-5 group"><label>Number of groups</label> </div>
               <div className="col-sm-1">
                 <div className="row">
                   <div className="col-sm-1"><i className="fas fa-sort-up fa-3x icon"
