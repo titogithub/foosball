@@ -199,6 +199,7 @@ export default class Home extends Component {
                 <input name="addPlayer"  onChange={this.handleChange} type="text" 
                   className="form-control add-todo" 
                   placeholder="Add player" 
+                  maxLength="24"
                   value={this.state.newPlayer}/>
                 <button onClick={this.addPlayer}  className="btn btn-success">Add</button>
 
