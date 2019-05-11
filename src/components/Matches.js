@@ -28,16 +28,6 @@ export default class Matches extends Component {
     })
   }
 
-  handleAddPlayer = () => {
-    const newPlayers = [...this.state.groupPlayers]
-    if (!this.state.groupPlayers.length) {
-      newPlayers.push({ idPlayer: 0, name: this.state.newPlayer })
-    } else {
-      newPlayers.push({ idPlayer: this.state.groupPlayers[this.state.groupPlayers.length - 1].idPlayer + 1, name: this.state.newPlayer })
-    }
-    this.setState({ groupPlayers: newPlayers, newPlayer: '' })
-  }
-
   addWinnersToPlayerList = winners => {
     this.props.addWinners(this.state.groupId, winners)
   }
@@ -158,6 +148,12 @@ export default class Matches extends Component {
     this.props.removePlayerFromGroup(idPlayer, groupId)
   }
 
+  handleKeyPress(target) {
+    if (target.charCode === 13) {
+      this.addNewGroupPlayer()
+    }
+  }
+
   render() {
     return (
       <div>
@@ -238,7 +234,9 @@ export default class Matches extends Component {
           <input name="newPlayer" onChange={this.handleInputChange} type="text"
               className="form-control add-todo"
               placeholder="Add player"
-              value={this.state.newPlayer} />
+              value={this.state.newPlayer} 
+              onKeyPress={(e) => this.handleKeyPress(e)}
+              />
           <button onClick={() => this.addNewGroupPlayer()} className="btn btn-success">Add</button>
 
         </ul>
