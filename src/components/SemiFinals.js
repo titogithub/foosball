@@ -41,7 +41,6 @@ export default class QuarterFinals extends Component {
       }
       return match
     })
-
     this.setState({ matches: newMatch })
   }
 
@@ -54,7 +53,6 @@ export default class QuarterFinals extends Component {
       }
       return match
     })
-
     this.setState({ matches: newMatch })
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import './EliminationMatchStyle.css'
 const EliminationMatch = ({
-    match, upScore = () => {console.log("upscore")}, downScore = () => {console.log("downScore")}
+    match, upScore, downScore
 }) => (
     <div>
       <li><span className="seed">{match.goalsA}</span> {match.nameA}
@@ -9,7 +9,7 @@ const EliminationMatch = ({
           onClick={() => upScore(match.idPlayerA, match.idMatch)}
         />
         <i className="fas fa-sort-down fa-2x icon score-right"
-          onClick={() => upScore(match.idPlayerA, match.idMatch)}
+          onClick={() => downScore(match.idPlayerA, match.idMatch)}
         />
         <span className="score"></span>
       </li>
@@ -19,7 +19,7 @@ const EliminationMatch = ({
           onClick={() => upScore(match.idPlayerB, match.idMatch)}
         />
         <i className="fas fa-sort-down fa-2x icon score-right"
-          onClick={() => upScore(match.idPlayerB, match.idMatch)}
+          onClick={() => downScore(match.idPlayerB, match.idMatch)}
         />
         <span className="score"></span>
       </li>
