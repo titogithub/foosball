@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PlayerItem from './PlayerItem';
-import DirectEliminationList from './DirectEliminationList';
+import Matches from './Matches';
 import BootstrapModal from './commons/BootstrapModal';
 import { exactNoOfGroups, unbalancedGroups, generateMatches, addNewPlayerToMatches, removePlayerFromMatches} from './commons/utils';
 import DivideStrategy from './commons/divideStrategy';
@@ -49,7 +49,8 @@ export default class Home extends Component {
         newPlayers.push(winners)
       }
     }
-  this.setState({ players: [...newPlayers] })
+    localStorage.setItem('winners', JSON.stringify(newPlayers))
+    this.setState({ players: [...newPlayers] })
   }
 
   handleChange = (e) => {
@@ -142,9 +143,9 @@ export default class Home extends Component {
     const matches = [...this.state.matches]
     matches.forEach(v => {
       if (v.groupId === group) {
-       const matchesAndPlayers = removePlayerFromMatches(idPlayer, v.matches, v.groupedPlayers)
-       v.matches = matchesAndPlayers.newMatches
-       v.groupedPlayers = matchesAndPlayers.newPlayers
+       const {newMatches, newPlayers} = removePlayerFromMatches(idPlayer, v.matches, v.groupedPlayers)
+       v.matches = newMatches
+       v.groupedPlayers = newPlayers
       }
     })
     this.setState({ matches })
@@ -229,7 +230,7 @@ export default class Home extends Component {
                       </div>
                     <div className="row">
                       <div className="col-xs-12">
-                          <DirectEliminationList matches={v.matches}
+                          <Matches matches={v.matches}
                             players={v.groupedPlayers}
                             qualificationQty={this.state.classified}
                             addWinners={(groupId, qualifiedPlayers) => this.addWinners(groupId, qualifiedPlayers)}

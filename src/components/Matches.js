@@ -3,7 +3,7 @@ import BootstrapModal from './commons/BootstrapModal';
 import Match from './Match';
 import PlayerItem from './PlayerItem';
 
-export default class DirectEliminationList extends Component {
+export default class Matches extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -137,9 +137,9 @@ export default class DirectEliminationList extends Component {
       if (v.points === minPoints.points) {
         validateWinners = false
       }
-  })
+    })
     return validateWinners
-}
+  }
 
   toggleModal = () => {
      this.setState({ showErrorModal: !this.state.showErrorModal })

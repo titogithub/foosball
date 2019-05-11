@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 
-const DirectEliminationItem = ({
+const MatchItem = ({
     match, upScore, downScore
 }) => (
         <div> 

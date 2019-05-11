@@ -45,6 +45,42 @@ const generateMatches = (players) => {
   return matches
 }
 
+const generateEliminationMatches = players => {
+  const sortedPlayers = players.sort((a,b) => {
+    return a.points - b.points
+  })
+  const matches = []
+  for (let i = 0; i < sortedPlayers.length/2; i++){
+    matches.push({
+      idMatch: 'Q'+i,
+      idPlayerA: sortedPlayers[i].idPlayer,
+      nameA: sortedPlayers[i].name,
+      goalsA: 0,
+      idPlayerB: sortedPlayers[sortedPlayers.length -1 - i].idPlayer,
+      nameB: sortedPlayers[sortedPlayers.length -1 -i].name,
+      goalsB: 0
+    })
+  }
+
+  return matches
+}
+
+const generateSemifinals = () => {
+  const matches = []
+  for (let i = 0; i < 2; i++) {
+    matches.push({
+      idMatch: 'S'+i,
+      idPlayerA: null,
+      nameA: '',
+      goalsA: 0,
+      idPlayerB: null,
+      nameB: '',
+      goalsB: 0
+    })
+  }
+  return matches
+}
+
 const addNewPlayerToMatches = (newPlayer, players, matches) => {
   for (let i = 0; i < players.length; i++) {
       matches.push({
@@ -77,6 +113,8 @@ export {
   exactNoOfGroups,
   unbalancedGroups,
   generateMatches,
+  generateEliminationMatches,
+  generateSemifinals,
   addNewPlayerToMatches,
   removePlayerFromMatches
     }
