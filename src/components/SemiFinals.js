@@ -110,7 +110,7 @@ export default class QuarterFinals extends Component {
             />
           </ul>
           <ul className="matchup">
-            <h5>Quarterfinals</h5>
+            <h5>Semifinals</h5>
             <EliminationMatch
               match={this.state.matches.find(v => v.idMatch === 'Q1')}
               upScore={(idPlayer, groupId) => this.handleUpScore(idPlayer, groupId)}
@@ -122,7 +122,7 @@ export default class QuarterFinals extends Component {
         <div className="col-1-8">
           <div className="round-two-top">
             <ul className="matchup">
-              <h5>Semifinals</h5>
+              <h5>Final</h5>
               <EliminationMatch
                 match={this.state.matches.find(v => v.idMatch === 'Final')}
                 upScore={(idPlayer, groupId) => this.handleUpScore(idPlayer, groupId)}
