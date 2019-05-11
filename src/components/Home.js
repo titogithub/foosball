@@ -177,8 +177,13 @@ export default class Home extends Component {
 
   componentDidMount(){
     const ds = new DivideStrategy()
-    this.setState({ divide: ds }, () => this.state.divide.setStrategy(exactNoOfGroups)
-)
+    this.setState({ divide: ds }, () => this.state.divide.setStrategy(exactNoOfGroups))
+  }
+
+  handleKeyPress(target) {
+    if (target.charCode === 13) {
+    this.addPlayer()
+    }
   }
 
   render() {
@@ -200,7 +205,9 @@ export default class Home extends Component {
                   className="form-control add-todo" 
                   placeholder="Add player" 
                   maxLength="24"
-                  value={this.state.newPlayer}/>
+                  value={this.state.newPlayer}
+                  onKeyPress={(e) => this.handleKeyPress(e)}
+                  />
                 <button onClick={this.addPlayer}  className="btn btn-success">Add</button>
 
                 <ul id="sortable" className="list-unstyled">

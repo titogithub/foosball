@@ -12,10 +12,10 @@ export default class Navbar extends Component {
 
       <nav className="navbar navbar-expand-md sticky-top navbar-inverse">
 
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#collapse_target">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+        <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#collapse_target">
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
         </button>
 
         <div className="collapse navbar-collapse" id="collapse_target">
