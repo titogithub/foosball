@@ -10,12 +10,17 @@ export default class Navbar extends Component {
   render() {
     return (
 
-      <nav className="navbar navbar-expand-md sticky-top navbar-inverse">
+      <nav className="navbar navbar-expand-md sticky-top  navbar-dark bg-dark">
 
+<<<<<<< HEAD
         <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#collapse_target">
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
           <span className="icon-bar"></span>
+=======
+        <button type="button" className="navbar-toggler " data-toggle="collapse" data-target="#collapse_target">
+          <span class="navbar-toggler-icon"></span>
+>>>>>>> stylesNavBar
         </button>
 
         <div className="collapse navbar-collapse" id="collapse_target">
