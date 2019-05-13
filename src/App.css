@@ -402,3 +402,8 @@ li.game{
   height: 35px;
   width: 40px;
 }
+
+/* NavBar */
+.Navlogo{
+  padding-top: 6px;
+}

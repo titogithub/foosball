@@ -10,7 +10,9 @@ export default class TournamentBrackets extends Component {
   }
 
   componentWillMount() {
-    this.setState({ winners: JSON.parse(localStorage.getItem("winners"))})
+    if (JSON.parse(localStorage.getItem("winners"))) {
+      this.setState({ winners: JSON.parse(localStorage.getItem("winners"))})
+    }  
   }
   
   render() {

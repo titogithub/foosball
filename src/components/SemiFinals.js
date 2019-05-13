@@ -14,7 +14,9 @@ export default class QuarterFinals extends Component {
   }
 
   componentWillMount() {
-    this.setState({ players: JSON.parse(localStorage.getItem("winners")) }, () => this.newMatches())
+    if (JSON.parse(localStorage.getItem("winners"))) {
+      this.setState({ winners: JSON.parse(localStorage.getItem("winners")) })
+    }
   }
 
   newMatches = () => {
